@@ -97,6 +97,9 @@ installs and authenticates `notebooklm` **first** — the other skills lean on i
 - **Claude Code** — the AI coding agent (VS Code extension or CLI).
 - **Python 3.10+** — for the NotebookLM CLI and the bibliography tools.
 - **A LaTeX distribution** — to build papers (TeX Live / MacTeX / MiKTeX).
+- **[LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop)**
+  (extension ID `James-Yu.latex-workshop`, by James Yu) — the recommended VS Code
+  LaTeX extension. It builds your `.tex` on save and shows a live PDF preview.
 - **`poppler-utils`** — provides the `pdftotext` command that `bib-classify`
   uses to read PDF first pages. Optional but recommended.
 

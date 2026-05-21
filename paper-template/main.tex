@@ -1,0 +1,62 @@
+% ---------------------------------------------------------------------------
+% Minimal paper template — paper-skills
+%
+% Build:  pdflatex main → bibtex main → pdflatex main → pdflatex main
+% Or, in VS Code with the "LaTeX Workshop" extension, just save the file.
+%
+% Bibliography: cite-keys come from refs.bib. The /bib-search skill (run with
+% --for-paper <this-folder-name>) appends new entries to refs.bib for you.
+% ---------------------------------------------------------------------------
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{natbib}            % \citep{} and \citet{}
+\bibliographystyle{plainnat}
+
+\title{Your Paper Title}
+\author{Author One \and Author Two}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+One paragraph stating the problem, your contribution, and the result. Write this
+last. Keep it self-contained --- a reader should understand the paper's claim
+from the abstract alone.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+Motivate the problem and state your contribution. Cite related work with
+\citep{example-key} for parenthetical citations and \citet{example-key} when the
+author is the sentence subject.
+
+\section{Related Work}
+\label{sec:related}
+Position your work against the literature. Use \verb|/bib-search| to discover
+references and \verb|/claim-cite| to find the strongest citation for a specific
+sentence.
+
+\section{Method}
+\label{sec:method}
+Describe your approach.
+
+\section{Results}
+\label{sec:results}
+Present the evidence.
+
+\section{Conclusion}
+\label{sec:conclusion}
+Restate the contribution and name the limitations.
+
+\bibliography{refs}
+
+\end{document}

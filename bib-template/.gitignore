@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+tmp/
+.DS_Store
+*.log
+# PDFs are kept out of version control (size + copyright). The folder
+# structure under pdfs/ is preserved by the .gitkeep files.
+pdfs/**/*.pdf

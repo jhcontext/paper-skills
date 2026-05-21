@@ -5,7 +5,7 @@
 **A kit of Claude Code skills for finding academic papers, building a local
 bibliography, and writing papers.**
 
-**Version 0.2.0** — see the [changelog](CHANGELOG.md) for what's new.
+**Version 0.2.1** — see the [changelog](CHANGELOG.md) for what's new.
 
 > [!TIP]
 > **Easiest way to install:** clone this repo, open the folder in
@@ -247,13 +247,19 @@ supporting quotes.
    `bib-upgrade` refreshes stale preprint citations; `claims-audit` checks that
    every `\cite{}` genuinely supports its sentence and flags uncited claims.
 
-### One NotebookLM notebook per paper
+### One NotebookLM notebook per working paper
 
-Each paper gets its **own NotebookLM notebook**, and the skills keep it fed
-automatically. The first time you run `/bib-search` or `/bib-snowball` with
-`--for-paper <name>`, the skill creates (or links) a notebook for that paper and
-records it in `papers/<name>/.notebook.json`. From then on, every PDF those
-skills download is also added to that notebook as a source.
+Here, **"paper" means your *working paper*** — the manuscript you are writing
+for a venue, i.e. a folder under `papers/<name>/`. It does **not** mean each
+reference paper you search for. Every working paper gets its **own NotebookLM
+notebook**, holding all the references *that* paper cites, and the skills keep
+it fed automatically.
+
+The first time you run `/bib-search` or `/bib-snowball` with `--for-paper <name>`
+— where `<name>` is your working paper's folder — the skill creates (or links) a
+notebook for it and records it in `papers/<name>/.notebook.json`. From then on,
+every PDF those skills download *for that working paper* is also added to its
+notebook as a source.
 
 - **Backfill an existing paper:** `/bib-classify --sync-notebook --for-paper <name>`
   pushes every PDF the paper already cites into its notebook in one pass.

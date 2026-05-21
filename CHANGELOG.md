@@ -4,6 +4,14 @@ All notable changes to `paper-skills` are documented here. This project follows
 [Semantic Versioning](https://semver.org). The current version is also shown at
 the top of the [README](README.md).
 
+## v0.2.1
+
+### Changed
+
+- Documentation: clarified that "one NotebookLM notebook per paper" means one
+  notebook per **working paper** — the manuscript you are writing for a venue, a
+  folder under `papers/<name>/` — and *not* per reference paper you search for.
+
 ## v0.2.0
 
 ### Added — citation snowballing

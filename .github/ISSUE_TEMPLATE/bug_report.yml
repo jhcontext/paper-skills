@@ -1,0 +1,26 @@
+name: Bug report
+description: Report something that does not work as described
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you ran, what you expected, and what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: The skill or command, plus any arguments.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, and the agent you used (Claude Code / other).
+    validations:
+      required: false

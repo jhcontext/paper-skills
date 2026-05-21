@@ -293,6 +293,13 @@ paper-skills/
 
 ---
 
+## Feedback and feature requests
+
+Found a bug, or want a new skill? Open a
+[GitHub issue](https://github.com/jhcontext/paper-skills/issues/new/choose) —
+the repo ships feature-request and bug-report templates. Pull requests are
+welcome too.
+
 ## License
 
 Released under the [Apache License 2.0](LICENSE).

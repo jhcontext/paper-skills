@@ -65,8 +65,8 @@ assistant. The mental model:
    does a **vector search** (also called *semantic search*): it finds the source
    chunks whose vectors are closest to the question's vector — "closest" usually
    measured by cosine similarity. This is the key difference from old-style
-   keyword search: a keyword search for *"heart attack"* misses a paragraph that
-   only says *"myocardial infarction"*; a vector search retrieves it, because the
+   keyword search: a keyword search for *"out of memory"* misses a paragraph
+   that only says *"heap exhaustion"*; a vector search retrieves it, because the
    two phrases mean the same thing and so sit near each other in vector space.
 4. **NotebookLM answers, grounded.** It writes the answer using *only* the
    retrieved chunks, with inline citations pointing back to the exact source

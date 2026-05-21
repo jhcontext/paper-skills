@@ -2,8 +2,8 @@
 
 This folder is your **local bibliography workspace**. It is the single source of
 truth for every paper you collect — managed by the `paper-skills` Claude Code
-skills (`/bib-search`, `/bib-classify`, `/bib-upgrade`, `/claim-cite`,
-`/claims-audit`).
+skills (`/bib-search`, `/bib-snowball`, `/bib-classify`, `/bib-upgrade`,
+`/claim-cite`, `/claims-audit`).
 
 It was created by `/install-paper-skills`. You can rename or move the folder
 freely — the tools locate themselves relative to `tools/`, so nothing breaks.
@@ -31,6 +31,9 @@ in place — don't keep `.bak` side-copies; use git for history.
   catalog first, then queries arXiv / OpenAlex / Semantic Scholar / Crossref /
   DBLP, downloads open-access PDFs into `pdfs/_unclassified/`, and appends new
   entries to `refs.bib` + `papers_inventory.csv`.
+- **Grow the set by citation snowballing** — `/bib-snowball` starts from papers
+  you already trust and follows their reference lists (backward) and the papers
+  that cite them (forward) to find related work topic search misses.
 - **File the downloaded PDFs** — `/bib-classify` sorts everything in
   `pdfs/_unclassified/` into the right `pdfs/<theme>/` folder and rebuilds the
   catalog.

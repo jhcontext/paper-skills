@@ -1,14 +1,14 @@
 ---
 name: install-paper-skills
-description: One-shot installer for the paper-skills kit. Installs the NotebookLM skill first (and runs its setup), asks the user for a name for their local bibliography folder, scaffolds that folder from bib-template/, then installs the remaining skills (bib-search, bib-classify, bib-upgrade, claim-cite, claims-audit) into ~/.claude/skills/ — wiring every skill to the chosen bibliography path. Activates on /install-paper-skills or "install the paper skills".
+description: One-shot installer for the paper-skills kit. Installs the NotebookLM skill first (and runs its setup), asks the user for a name for their local bibliography folder, scaffolds that folder from bib-template/, then installs the remaining skills (bib-search, bib-snowball, bib-classify, bib-upgrade, claim-cite, claims-audit) into ~/.claude/skills/ — wiring every skill to the chosen bibliography path. Activates on /install-paper-skills or "install the paper skills".
 user-invocable: true
 argument-hint: "(no arguments — the installer will ask you for a bibliography folder name)"
 ---
 
 # Install the paper-skills kit
 
-You are the **paper-skills installer**. You set up six Claude Code skills plus a
-local bibliography workspace, so the user can discover papers, organise a
+You are the **paper-skills installer**. You set up seven Claude Code skills plus
+a local bibliography workspace, so the user can discover papers, organise a
 bibliography, and write papers — and share the exact same setup with colleagues.
 
 Run the steps below **in order**. Confirm with the user before any step that
@@ -26,8 +26,8 @@ This skill file lives at `<repo>/.claude/skills/install-paper-skills/SKILL.md`.
 2. Set `SKILLS_DIR="$HOME/.claude/skills"` and `mkdir -p "$SKILLS_DIR"`.
 
 Tell the user what you're about to install: the `notebooklm`, `bib-search`,
-`bib-classify`, `bib-upgrade`, `claim-cite`, and `claims-audit` skills, plus a
-local bibliography folder.
+`bib-snowball`, `bib-classify`, `bib-upgrade`, `claim-cite`, and `claims-audit`
+skills, plus a local bibliography folder.
 
 ## Step 1 — Install NotebookLM first (and set it up)
 
@@ -83,8 +83,8 @@ git -C "$BIB_ROOT" init && git -C "$BIB_ROOT" add -A && git -C "$BIB_ROOT" commi
 
 ## Step 4 — Install the remaining skills
 
-For each of `bib-search`, `bib-classify`, `bib-upgrade`, `claim-cite`,
-`claims-audit`:
+For each of `bib-search`, `bib-snowball`, `bib-classify`, `bib-upgrade`,
+`claim-cite`, `claims-audit`:
 
 1. Copy the skill folder into `$SKILLS_DIR`.
 2. Substitute the bibliography path placeholder. Every distributed skill file
@@ -92,7 +92,7 @@ For each of `bib-search`, `bib-classify`, `bib-upgrade`, `claim-cite`,
    `BIB_ROOT` path:
 
 ```bash
-for name in bib-search bib-classify bib-upgrade claim-cite claims-audit; do
+for name in bib-search bib-snowball bib-classify bib-upgrade claim-cite claims-audit; do
   mkdir -p "$SKILLS_DIR/$name"
   cp "$REPO/skills/$name/SKILL.md" "$SKILLS_DIR/$name/SKILL.md"
   sed -i "s|__BIB_ROOT__|$BIB_ROOT|g" "$SKILLS_DIR/$name/SKILL.md"
@@ -119,8 +119,8 @@ cp "$REPO/.claude/skills/install-paper-skills/SKILL.md" "$SKILLS_DIR/install-pap
 ## Step 6 — Verify and report
 
 1. List the installed skills: `ls "$SKILLS_DIR"` — expect `notebooklm`,
-   `bib-search`, `bib-classify`, `bib-upgrade`, `claim-cite`, `claims-audit`,
-   `install-paper-skills`.
+   `bib-search`, `bib-snowball`, `bib-classify`, `bib-upgrade`, `claim-cite`,
+   `claims-audit`, `install-paper-skills`.
 2. Confirm the bibliography tools run against the empty scaffold:
    ```bash
    python3 "$BIB_ROOT/tools/build_catalog.py"

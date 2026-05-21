@@ -17,7 +17,7 @@ If you do research, you probably repeat the same loop: hunt for relevant
 papers, download PDFs, keep a BibTeX file tidy, swap preprints for their
 published versions, and make sure every citation in your draft actually
 supports the sentence it's attached to. `paper-skills` packages that whole loop
-as six installable [Claude Code](https://claude.com/claude-code) skills, plus a
+as seven installable [Claude Code](https://claude.com/claude-code) skills, plus a
 one-command installer — so you can set it up once and hand the same workflow to
 a colleague or a student.
 
@@ -47,6 +47,7 @@ run shell commands, can follow them too — see
 | [`install-paper-skills`](.claude/skills/install-paper-skills/SKILL.md) | One-shot installer. Installs NotebookLM first, asks you to name your bibliography folder, scaffolds it, then installs the other five skills. |
 | [`notebooklm`](skills/notebooklm/SKILL.md) | Full programmatic access to Google NotebookLM — create notebooks, add sources, ask grounded questions, generate podcasts / reports / mind maps. |
 | [`bib-search`](skills/bib-search/SKILL.md) | Discover references. Checks your local catalog first, then queries arXiv, OpenAlex, Semantic Scholar, Crossref and DBLP, downloads open-access PDFs, and appends new entries to your master `refs.bib`. |
+| [`bib-snowball`](skills/bib-snowball/SKILL.md) | Discover references by *citation snowballing*: from seed papers you already trust, follow their reference lists (backward) and the papers that cite them (forward) to find related work keyword search misses. |
 | [`bib-classify`](skills/bib-classify/SKILL.md) | Organise the library. Files every freshly downloaded PDF into a themed folder and rebuilds the catalog. |
 | [`bib-upgrade`](skills/bib-upgrade/SKILL.md) | Keep the bibliography fresh. Sweeps for preprint → peer-reviewed upgrades (arXiv → journal/conference) and patches entries in place — cite-keys preserved. |
 | [`claim-cite`](skills/claim-cite/SKILL.md) | Find the strongest citation for a specific claim sentence, ranked by evidence strength. |
@@ -194,6 +195,14 @@ Searches the open scholarly databases, downloads open-access PDFs into
 catalog. Paywalled items come back as a list of things to download by hand.
 
 ```
+/bib-snowball --for-paper my-survey
+```
+Grows the set the other way — from papers you already trust, it follows their
+reference lists and the papers that cite them (Wohlin-style snowballing), ranks
+what comes back by how many seeds it connects to, and ingests your picks the
+same way `/bib-search` does.
+
+```
 /bib-classify
 ```
 Files every PDF sitting in `pdfs/_unclassified/` into the right themed folder
@@ -272,9 +281,10 @@ paper-skills/
 ├── LICENSE                       Apache License 2.0
 ├── .claude/skills/
 │   └── install-paper-skills/     the installer (auto-discovered in this repo)
-├── skills/                       the five skills the installer copies out
+├── skills/                       the seven skills the installer copies out
 │   ├── notebooklm/
 │   ├── bib-search/
+│   ├── bib-snowball/
 │   ├── bib-classify/
 │   ├── bib-upgrade/
 │   ├── claim-cite/

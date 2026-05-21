@@ -5,6 +5,8 @@
 **A kit of Claude Code skills for finding academic papers, building a local
 bibliography, and writing papers.**
 
+**Version 0.2.0** — see the [changelog](CHANGELOG.md) for what's new.
+
 > [!TIP]
 > **Easiest way to install:** clone this repo, open the folder in
 > [Claude Code](https://claude.com/claude-code), and ask it — *"Read the README
@@ -245,12 +247,21 @@ supporting quotes.
    `bib-upgrade` refreshes stale preprint citations; `claims-audit` checks that
    every `\cite{}` genuinely supports its sentence and flags uncited claims.
 
-### Grounding citations with NotebookLM
+### One NotebookLM notebook per paper
 
-For the strongest results, create a NotebookLM notebook for your paper and add
-the PDFs you've collected (`/notebooklm` can do this). Then `claim-cite` and
-`claims-audit` can verify citations against the *full text* of each source, not
-just its abstract.
+Each paper gets its **own NotebookLM notebook**, and the skills keep it fed
+automatically. The first time you run `/bib-search` or `/bib-snowball` with
+`--for-paper <name>`, the skill creates (or links) a notebook for that paper and
+records it in `papers/<name>/.notebook.json`. From then on, every PDF those
+skills download is also added to that notebook as a source.
+
+- **Backfill an existing paper:** `/bib-classify --sync-notebook --for-paper <name>`
+  pushes every PDF the paper already cites into its notebook in one pass.
+- **Opt out** of a single run with `--no-notebook`.
+
+Because the notebook is linked to the paper, `/claim-cite` and `/claims-audit`
+find it automatically (via `--for-paper` / `--venue`) and verify your citations
+against the *full text* of each source — not just its abstract.
 
 ---
 
@@ -278,6 +289,7 @@ If your agent doesn't support auto-discovered skills, just open the relevant
 ```
 paper-skills/
 ├── README.md
+├── CHANGELOG.md                  version history
 ├── LICENSE                       Apache License 2.0
 ├── .claude/skills/
 │   └── install-paper-skills/     the installer (auto-discovered in this repo)

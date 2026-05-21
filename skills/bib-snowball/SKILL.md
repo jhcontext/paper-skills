@@ -38,6 +38,9 @@ A few rounds of this converge on a fairly complete picture of a sub-field.
   highly-cited seed from flooding the round. Default: 25.
 - `--dry-run` — do the graph walk and ranking, report the candidates, but do
   **not** download PDFs or write to `refs.bib`.
+- `--notebook "<title>"` — explicitly name the NotebookLM notebook to feed.
+  Overrides the per-paper notebook resolved from `--for-paper`.
+- `--no-notebook` — skip the NotebookLM upload even when `--for-paper` is set.
 
 At least one of: seed cite-keys, `--for-paper`, or `--theme` must be given. If
 none is given, ask the user which papers to snowball from.
@@ -141,6 +144,16 @@ For each accepted candidate, follow the **same ingest path as `/bib-search`**:
    `__BIB_ROOT__/papers/<name>/refs.bib` with a local cite-key and record the
    alias in `__BIB_ROOT__/cite_key_aliases.csv` — exactly as `/bib-search
    --for-paper` does.
+6. **NotebookLM sync** — if `--for-paper <name>` is set and `--no-notebook` is
+   not, mirror each downloaded PDF into that paper's NotebookLM notebook (**one
+   notebook per paper**). Resolve the notebook once: read
+   `__BIB_ROOT__/papers/<name>/.notebook.json` for its `id`; if that file is
+   absent, fall back to `--notebook "<title>"`, or `notebooklm list` + confirm a
+   match, or `notebooklm create "<name>"` — then write the chosen `id` and
+   `title` back to `.notebook.json`. Upload via the `/notebooklm` skill
+   (`notebooklm use <id>`, then `notebooklm source add <absolute pdf path>`),
+   skipping any PDF whose title is already a source. This is the same mechanism
+   `/bib-search` uses, so the notebook stays consistent across both skills.
 
 Never rename existing cite-keys. Never bypass paywalls.
 
@@ -168,6 +181,7 @@ Seeds: <N>   Direction: <both/backward/forward>
 - Open-access PDFs downloaded: <N>
 - Paywalled (manual download needed): <N>
 - Master refs.bib entries: <before> → <after>
+- NotebookLM: <N PDFs added to notebook "<title>"> (or "skipped")
 
 ## Manual downloads needed
 <per-item: title, authors, venue, DOI, save-to path>

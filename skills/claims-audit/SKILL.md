@@ -23,7 +23,7 @@ fast and you want a sanity check.
 - `--min-citations <N>` — threshold below which a cite-backed claim is flagged as "weak" due to a low citation count on the source. Default: `0` (off). Suggest `10` for journals.
 - `--skip-unsupported` — skip the unsupported-declarative-claim pass; only audit existing `\cite{}`s. Default: run both passes.
 - `--no-notebooklm` — skip the NotebookLM grounded-quote verification layer. Pure abstract-based evaluation, much faster, less confident. Default: NotebookLM is used if a notebook is available.
-- `--notebook "<title>"` — the NotebookLM notebook to use for grounded verification. If omitted, the skill runs `notebooklm list` and uses the obvious match or asks the user.
+- `--notebook "<title>"` — the NotebookLM notebook to use for grounded verification. Overrides the paper's own notebook. If omitted, the skill reads the paper's linked notebook from `__BIB_ROOT__/papers/<name>/.notebook.json`; if there is none, it runs `notebooklm list` and uses the obvious match or asks the user.
 - `--output <path>` — where to save the report. Default: `__BIB_ROOT__/papers/<name>/claims_audit_<YYYY-MM-DD>.md`.
 
 ## Setup
@@ -73,7 +73,7 @@ Be conservative with **TANGENTIAL** — only flag when the mismatch is clear. Wh
 
 Local abstract matching is surface-level. NotebookLM has the *full source text* indexed and returns grounded quotes, which dramatically raises confidence. Use it as a targeted second opinion.
 
-First pick the notebook: use `--notebook "<title>"` if given, else `notebooklm list` and choose the obvious match (or ask the user). If the user has no notebook for this paper's references, skip this stage and note it.
+First pick the notebook: use `--notebook "<title>"` if given; else read the paper's linked notebook `id` from `__BIB_ROOT__/papers/<name>/.notebook.json` (created by `/bib-search`/`/bib-snowball`/`/bib-classify` — **one notebook per paper**); else `notebooklm list` and choose the obvious match (or ask the user). If the user has no notebook for this paper's references, skip this stage and note it — and suggest running `/bib-classify --sync-notebook --for-paper <name>` to build one.
 
 **Which rows to send to NotebookLM?** Not all — it's expensive. Prioritize:
 - All **TANGENTIAL** and **ADJACENT** verdicts (need confirmation/refutation).

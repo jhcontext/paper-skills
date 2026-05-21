@@ -18,7 +18,7 @@ Ranking is evidence-first: peer-reviewed beats preprint, high-citation beats low
 
 - **Claim** (required, free text, usually in quotes) — a sentence you want to cite. E.g., `"LLM agents can hallucinate tool calls"`, `"FHIR Provenance resources support cryptographic signatures"`.
 - `--for-paper <name>` — a folder under `__BIB_ROOT__/papers/`. If set, prioritize candidates the paper already cites (no new dependency) and forward new additions to `/bib-search --for-paper <name>`.
-- `--notebook "<title>"` — the NotebookLM notebook to cross-query for grounded passages. If omitted, the skill runs `notebooklm list` and either uses the obvious match or asks the user which notebook to use. Skipped entirely under `--no-web`.
+- `--notebook "<title>"` — the NotebookLM notebook to cross-query for grounded passages. Overrides the per-paper notebook. If omitted and `--for-paper` is set, the skill reads that paper's linked notebook from `__BIB_ROOT__/papers/<name>/.notebook.json`; if there is none, it runs `notebooklm list` and uses the obvious match or asks. Skipped entirely under `--no-web`.
 - `--min-citations <N>` — filter out low-impact refs (default: 0; suggest 10 for load-bearing claims in journal submissions).
 - `--year-from <YYYY>` — prefer recent; default: no bound.
 - `--no-web` — pure local lookup (skip NotebookLM + skip fall-through to `/bib-search`).
@@ -71,6 +71,7 @@ For claims that need *grounded* evidence (not just a topical match), invoke the 
 
 1. Determine which notebook to query:
    - If `--notebook "<title>"` was passed, use it.
+   - Else if `--for-paper <name>` is set and `__BIB_ROOT__/papers/<name>/.notebook.json` exists, use the `id` recorded there — that is the paper's own notebook (created by `/bib-search`/`/bib-snowball`/`/bib-classify`).
    - Otherwise run `notebooklm list`. If exactly one notebook looks relevant to the claim's topic, use it; if several could fit, ask the user to pick.
    - If the user has no notebooks yet, skip this stage and note it in the report.
 2. Ask the notebook: **"Which sources in this notebook directly support the claim: '<claim>'? For each, quote the exact passage (1–3 sentences) and name the source."**

@@ -28,6 +28,8 @@ Parse the user's invocation:
 - `--local-only` — skip network; report existing coverage only.
 - `--for-paper <name>` — the paper that triggered the search. `<name>` is a folder under `__BIB_ROOT__/papers/`. When set, new entries are appended to both the master `refs.bib` **and** that paper's local `refs.bib` (using the paper's existing cite-key convention). If the user doesn't pass this explicitly but the conversation context makes the triggering paper obvious (they're editing its `.tex`), infer it and proceed — but state what you inferred.
 - `--no-upgrade-check` — skip the upgrade-detection pass on existing entries.
+- `--notebook "<title>"` — explicitly name the NotebookLM notebook to feed. Overrides the per-paper notebook resolved from `--for-paper` (see *NotebookLM sync* below).
+- `--no-notebook` — skip the NotebookLM upload entirely, even when `--for-paper` is set.
 
 ## Setup
 
@@ -117,7 +119,23 @@ Never attempt to bypass paywalls programmatically. The download link is printed 
 - Leave per-paper `refs.bib` files untouched.
 - Leave `cited_in` blank — it'll be populated by `tools/build_catalog.py` once a paper's `.tex` actually `\cite{}`s the new master key.
 
-### Stage 7 — Report
+### Stage 7 — Sync to the paper's NotebookLM notebook
+
+When `--for-paper <name>` is set and `--no-notebook` is not passed, mirror every
+PDF this run downloaded into that paper's NotebookLM notebook — **one notebook
+per paper** — so `/claim-cite` and `/claims-audit` can later query the full text.
+
+**Resolve the notebook** (once, before uploading):
+1. If `__BIB_ROOT__/papers/<name>/.notebook.json` exists, read its `id` — that is the paper's notebook.
+2. Else if `--notebook "<title>"` was passed, find that notebook via `notebooklm list` (create it with `notebooklm create "<title>"` if absent).
+3. Else run `notebooklm list`. If a notebook's title clearly matches the paper, ask the user to confirm linking it; if none matches, create one with `notebooklm create "<name>"`.
+4. Write the chosen notebook's `id` and `title` to `__BIB_ROOT__/papers/<name>/.notebook.json` as `{"title": "...", "id": "..."}`, so every later run — and `/claim-cite`, `/claims-audit`, `/bib-snowball` — reuses the same notebook.
+
+**Upload:** for each open-access PDF downloaded in Stage 5, invoke the `/notebooklm` skill to add it as a source (`notebooklm use <id>`, then `notebooklm source add <absolute path to pdf>`). Skip a PDF if a source with the same title already exists in the notebook (no duplicates). Paywalled items have no PDF yet — list them so the user can add them after a manual download.
+
+If `--for-paper` is not set, or `--no-notebook` is passed, skip this stage.
+
+### Stage 8 — Report
 
 Output in this order:
 
@@ -148,6 +166,7 @@ For each paywalled item:
 - Open-access downloaded: <N>
 - Paywalled (manual): <N>
 - Master refs.bib entries: <before> → <after>
+- NotebookLM: <N PDFs added to notebook "<title>"> (or "skipped — no --for-paper")
 ```
 
 ## Hygiene
@@ -169,5 +188,6 @@ For each paywalled item:
 /bib-search "W3C PROV provenance agent" --theme provenance --year-from 2020
 /bib-search "retrieval augmented generation clinical notes" --theme healthcare-fhir --max-results 30
 /bib-search "PRISMA 2020 systematic review" --theme surveys-methodology --local-only
-/bib-search "graph neural networks" --for-paper my-survey
+/bib-search "graph neural networks" --for-paper my-survey          # also uploads PDFs to my-survey's notebook
+/bib-search "graph neural networks" --for-paper my-survey --no-notebook
 ```

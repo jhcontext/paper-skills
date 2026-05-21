@@ -47,6 +47,14 @@ To start a new paper, copy the `paper-template/` from the `paper-skills` repo
 into `papers/<name>/`. `<name>` is then the venue label used by
 `/bib-search --for-paper <name>` and `/claims-audit --venue <name>`.
 
+Each paper gets **one NotebookLM notebook**. The first `/bib-search` or
+`/bib-snowball` run with `--for-paper <name>` creates or links it and writes the
+link to `papers/<name>/.notebook.json` (`{"title": ..., "id": ...}`); every PDF
+the skills download for that paper is then added to the notebook as a source,
+and `/claim-cite` and `/claims-audit` query it automatically. To load an
+existing paper's references into its notebook in one pass, run
+`/bib-classify --sync-notebook --for-paper <name>`.
+
 ## Catalog schema (`papers_inventory.csv`)
 
 | Column | Meaning |

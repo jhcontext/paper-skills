@@ -5,6 +5,14 @@
 **A kit of Claude Code skills for finding academic papers, building a local
 bibliography, and writing papers.**
 
+> [!TIP]
+> **Easiest way to install:** clone this repo, open the folder in
+> [Claude Code](https://claude.com/claude-code), and ask it — *"Read the README
+> and install paper-skills, walking me through each step."* Claude Code runs the
+> [`install-paper-skills`](.claude/skills/install-paper-skills/SKILL.md) skill
+> and guides you the rest of the way. Full step-by-step details are in
+> [Installing the skills](#installing-the-skills) below.
+
 If you do research, you probably repeat the same loop: hunt for relevant
 papers, download PDFs, keep a BibTeX file tidy, swap preprints for their
 published versions, and make sure every citation in your draft actually

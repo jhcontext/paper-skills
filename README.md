@@ -5,7 +5,7 @@
 **A kit of Claude Code skills for finding academic papers, building a local
 bibliography, and writing papers.**
 
-**Version 0.2.1** — see the [changelog](CHANGELOG.md) for what's new.
+**Version 0.2.2** — see the [changelog](CHANGELOG.md) for what's new.
 
 > [!TIP]
 > **Easiest way to install:** clone this repo, open the folder in
@@ -331,3 +331,18 @@ welcome too.
 ## License
 
 Released under the [Apache License 2.0](LICENSE).
+
+---
+
+## Part of an active research project
+
+These skills are extracted from an ongoing research project on **autonomous
+scientific research agents** — multi-agent systems that handle the full
+research loop end to end (literature discovery, evidence retrieval, claim
+verification, drafting, and revision) rather than just isolated steps. The
+image below sketches several earlier prototypes from that line of work; the
+skills in this repo are the parts of the pipeline that turned out to be
+generally useful on their own, packaged so any researcher can use them today
+while the broader agent system is still being developed.
+
+![Previous research prototypes for autonomous scientific research agents](docs/previous-researches.jpeg)

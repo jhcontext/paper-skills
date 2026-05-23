@@ -4,6 +4,14 @@ All notable changes to `paper-skills` are documented here. This project follows
 [Semantic Versioning](https://semver.org). The current version is also shown at
 the top of the [README](README.md).
 
+## v0.2.2
+
+### Changed
+
+- README: added a closing *Part of an active research project* section that
+  frames the kit as an extraction from an ongoing research project on
+  autonomous scientific research agents, with an image of earlier prototypes.
+
 ## v0.2.1
 
 ### Changed

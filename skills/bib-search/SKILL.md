@@ -31,6 +31,29 @@ Parse the user's invocation:
 - `--notebook "<title>"` — explicitly name the NotebookLM notebook to feed. Overrides the per-paper notebook resolved from `--for-paper` (see *NotebookLM sync* below).
 - `--no-notebook` — skip the NotebookLM upload entirely, even when `--for-paper` is set.
 
+## Workspace resolution & pre-sync
+
+Before reading anything, resolve which bibliography workspace this search is for
+(it may be a shared bib or the user's own — they can differ from this install's
+default `__BIB_ROOT__`):
+
+```bash
+python3 __BIB_ROOT__/tools/workspace.py resolve \
+  --from "${PAPER_DIR:-$PWD}" --default __BIB_ROOT__
+```
+
+Use the resolved `bib_root` everywhere below in place of `__BIB_ROOT__`. If the
+resolved workspace has an `s3` block, **pull the shared PDFs first** so coverage
+checks and de-duplication see the real library (skip silently if local-only):
+
+```bash
+python3 <bib_root>/tools/s3_sync.py pull --from "${PAPER_DIR:-$PWD}"
+```
+
+(If `aws` is missing or the profile isn't authenticated, the helper prints the
+exact `aws configure` fix and exits non-zero — surface that and continue with the
+local library.)
+
 ## Setup
 
 1. Read the master catalog: `__BIB_ROOT__/papers_inventory.csv`.
@@ -136,6 +159,16 @@ per paper** — so `/claim-cite` and `/claims-audit` can later query the full te
 If `--for-paper` is not set, or `--no-notebook` is passed, skip this stage.
 
 ### Stage 8 — Report
+
+If any PDF was downloaded this run **and** the resolved workspace has an `s3`
+block, remind the user to share the new files with the team:
+
+```bash
+python3 <bib_root>/tools/s3_sync.py push --from "${PAPER_DIR:-$PWD}"
+```
+
+(Push is manual on purpose — don't run it automatically; just surface the
+command. Local-only workspaces have nothing to push.)
 
 Output in this order:
 

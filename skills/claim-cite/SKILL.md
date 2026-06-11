@@ -24,6 +24,20 @@ Ranking is evidence-first: peer-reviewed beats preprint, high-citation beats low
 - `--no-web` — pure local lookup (skip NotebookLM + skip fall-through to `/bib-search`).
 - `--max-candidates <N>` — final shortlist size (default: 5).
 
+## Workspace resolution
+
+Metadata + NotebookLM only — **no PDF sync needed**. Resolve which bib workspace
+applies (it may be shared or personal, not this install's default `__BIB_ROOT__`)
+and use the resolved `bib_root` below:
+
+```bash
+python3 __BIB_ROOT__/tools/workspace.py resolve \
+  --from "${PAPER_DIR:-$PWD}" --default __BIB_ROOT__ --field bib_root
+```
+
+The resolved `notebooklm.profile` tells you which NotebookLM login to query — a
+collaborator uses their own profile against notebooks shared with them.
+
 ## Setup
 
 Read these files:

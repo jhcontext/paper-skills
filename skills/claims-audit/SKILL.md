@@ -26,6 +26,20 @@ fast and you want a sanity check.
 - `--notebook "<title>"` — the NotebookLM notebook to use for grounded verification. Overrides the paper's own notebook. If omitted, the skill reads the paper's linked notebook from `__BIB_ROOT__/papers/<name>/.notebook.json`; if there is none, it runs `notebooklm list` and uses the obvious match or asks the user.
 - `--output <path>` — where to save the report. Default: `__BIB_ROOT__/papers/<name>/claims_audit_<YYYY-MM-DD>.md`.
 
+## Workspace resolution
+
+Metadata + NotebookLM only — **no PDF sync needed**. Resolve which bib workspace
+applies (it may be shared or personal, not this install's default `__BIB_ROOT__`)
+and use the resolved `bib_root` below:
+
+```bash
+python3 __BIB_ROOT__/tools/workspace.py resolve \
+  --from "${PAPER_DIR:-$PWD}" --default __BIB_ROOT__ --field bib_root
+```
+
+The resolved `notebooklm.profile` tells you which NotebookLM login to query — a
+collaborator uses their own profile against notebooks shared with them.
+
 ## Setup
 
 Read:

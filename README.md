@@ -19,9 +19,10 @@ If you do research, you probably repeat the same loop: hunt for relevant
 papers, download PDFs, keep a BibTeX file tidy, swap preprints for their
 published versions, and make sure every citation in your draft actually
 supports the sentence it's attached to. `paper-skills` packages that whole loop
-as seven installable [Claude Code](https://claude.com/claude-code) skills, plus a
+as eight installable [Claude Code](https://claude.com/claude-code) skills, plus a
 one-command installer — so you can set it up once and hand the same workflow to
-a colleague or a student.
+a colleague or a student, sharing one bibliography, PDF library, and set of
+NotebookLM notebooks across the team.
 
 It was built and tested with **Claude Code**, but the skills are plain Markdown
 instruction files and the helper scripts are plain Python (standard library
@@ -46,7 +47,7 @@ run shell commands, can follow them too — see
 
 | Skill | What it does |
 |---|---|
-| [`install-paper-skills`](.claude/skills/install-paper-skills/SKILL.md) | One-shot installer. Installs NotebookLM first, asks you to name your bibliography folder, scaffolds it, then installs the other five skills. |
+| [`install-paper-skills`](.claude/skills/install-paper-skills/SKILL.md) | One-shot installer. Installs NotebookLM first, asks you to name your bibliography folder, scaffolds it, optionally connects a shared S3 PDF library, then installs the other skills. |
 | [`notebooklm`](skills/notebooklm/SKILL.md) | Full programmatic access to Google NotebookLM — create notebooks, add sources, ask grounded questions, generate podcasts / reports / mind maps. |
 | [`bib-search`](skills/bib-search/SKILL.md) | Discover references. Checks your local catalog first, then queries arXiv, OpenAlex, Semantic Scholar, Crossref and DBLP, downloads open-access PDFs, and appends new entries to your master `refs.bib`. |
 | [`bib-snowball`](skills/bib-snowball/SKILL.md) | Discover references by *citation snowballing*: from seed papers you already trust, follow their reference lists (backward) and the papers that cite them (forward) to find related work keyword search misses. |
@@ -54,9 +55,25 @@ run shell commands, can follow them too — see
 | [`bib-upgrade`](skills/bib-upgrade/SKILL.md) | Keep the bibliography fresh. Sweeps for preprint → peer-reviewed upgrades (arXiv → journal/conference) and patches entries in place — cite-keys preserved. |
 | [`claim-cite`](skills/claim-cite/SKILL.md) | Find the strongest citation for a specific claim sentence, ranked by evidence strength. |
 | [`claims-audit`](skills/claims-audit/SKILL.md) | Audit a finished draft — check that every `\cite{}` actually supports its sentence, and flag claims that have no citation at all. |
+| [`bib-sync`](skills/bib-sync/SKILL.md) | Sync your PDF library to/from cloud storage (S3) so a team shares one library. Metadata goes through git; heavy PDFs go through S3. `bib-search`/`bib-classify` auto-pull before they need PDFs. |
 
 Everything in this repo is generic: no personal data, no project names, no
 private endpoints. The installer wires the skills to *your* chosen folder.
+
+### Working as a team
+
+The kit supports multiple people on the same papers and bibliography:
+
+- **Workspaces** — each bibliography folder carries a non-secret
+  `.paper-skills.json` naming its S3 bucket and NotebookLM profile. Skills
+  auto-detect which workspace you're in, so you can keep your own papers *and*
+  collaborate on a shared bib on the same machine without re-installing.
+- **PDFs** sync via S3 (`/bib-sync`); **metadata** (`refs.bib`, the catalog)
+  syncs via git. **No credentials are ever stored in the repo** — AWS keys live
+  in `~/.aws`, NotebookLM auth in `~/.notebooklm`.
+- **NotebookLM** notebooks are shared with collaborators' Google accounts
+  (`notebooklm share add <email> --permission editor`) — one source of truth, no
+  duplication. See the `notebooklm` skill's *Team access* section.
 
 ---
 
@@ -171,7 +188,8 @@ side. Open the included [`paper-template/`](paper-template/) folder, save
    - ask you to **name your bibliography folder** (e.g. `paper-bib`) and where to
      put it;
    - scaffold that folder from [`bib-template/`](bib-template/);
-   - install the remaining five skills into `~/.claude/skills/`, each wired to
+   - optionally connect a shared S3 bucket so a team syncs one PDF library;
+   - install the remaining skills into `~/.claude/skills/`, each wired to
      your chosen folder;
    - offer to `git init` the bibliography folder so you can version and share it.
 5. **Restart Claude Code** (or reload the VS Code window) so the new slash
@@ -299,19 +317,21 @@ paper-skills/
 ├── LICENSE                       Apache License 2.0
 ├── .claude/skills/
 │   └── install-paper-skills/     the installer (auto-discovered in this repo)
-├── skills/                       the seven skills the installer copies out
+├── skills/                       the eight skills the installer copies out
 │   ├── notebooklm/
 │   ├── bib-search/
 │   ├── bib-snowball/
 │   ├── bib-classify/
 │   ├── bib-upgrade/
 │   ├── claim-cite/
-│   └── claims-audit/
+│   ├── claims-audit/
+│   └── bib-sync/                 sync the PDF library to/from S3 (team workflows)
 ├── bib-template/                 scaffold for your bibliography folder
 │   ├── README.md                 catalog schema + theme taxonomy + workflow
+│   ├── .paper-skills.json        per-workspace config (S3 bucket + NotebookLM profile; non-secret)
 │   ├── refs.bib                  master BibTeX (starts empty)
 │   ├── papers_inventory.csv      the catalog (starts empty)
-│   ├── tools/                    Python maintenance scripts
+│   ├── tools/                    Python maintenance scripts (incl. workspace.py, s3_sync.py)
 │   ├── pdfs/<theme>/             PDFs filed by theme
 │   └── papers/                   your LaTeX paper projects live here
 ├── paper-template/               a minimal LaTeX article to copy per paper

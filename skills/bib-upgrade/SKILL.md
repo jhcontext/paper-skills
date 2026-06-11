@@ -22,6 +22,17 @@ common reviewer objection. Run this skill before every submission deadline.
 - `--since <ISO-date>` — only check entries added/updated since this date (for incremental runs).
 - `--min-age-days <N>` — only check entries older than N days (new preprints are rarely published yet; default: 180).
 
+## Workspace resolution
+
+This is a metadata-only skill — **no PDF sync needed**. But resolve which bib
+workspace applies (it may be a shared or personal bib, not this install's default
+`__BIB_ROOT__`) and use the resolved `bib_root` below:
+
+```bash
+python3 __BIB_ROOT__/tools/workspace.py resolve \
+  --from "${PAPER_DIR:-$PWD}" --default __BIB_ROOT__ --field bib_root
+```
+
 ## Setup
 
 Read:

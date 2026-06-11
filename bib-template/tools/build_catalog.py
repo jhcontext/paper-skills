@@ -18,7 +18,16 @@ from _bibparse import parse_bibfile  # noqa: E402
 from classify_theme import classify_entry_fields  # noqa: E402
 from sync_cited_in import build_cited_in_map, per_paper_local_keys  # noqa: E402
 
-BIB_ROOT = Path(__file__).resolve().parent.parent
+# Honours PAPER_SKILLS_BIB_ROOT (set by a skill that resolved the target
+# workspace); otherwise the bib root this tools/ dir lives in. Falls back
+# gracefully on older installs that predate workspace.py.
+try:
+    from workspace import bib_root_default  # noqa: E402
+    BIB_ROOT = bib_root_default(__file__)
+except Exception:
+    import os
+    BIB_ROOT = Path(os.environ.get("PAPER_SKILLS_BIB_ROOT")
+                     or Path(__file__).resolve().parent.parent)
 PDFS_ROOT = BIB_ROOT / "pdfs"
 
 COLUMNS = [

@@ -22,6 +22,24 @@ it whenever the user asks.
 - `--sync-notebook` — after the PDF triage, run the NotebookLM backfill (see *NotebookLM backfill* below). Requires `--for-paper`.
 - `--for-paper <name>` — the paper whose NotebookLM notebook to backfill. `<name>` is a folder under `__BIB_ROOT__/papers/`.
 
+## Workspace resolution & pre-sync
+
+Resolve which bibliography workspace to classify into (may be a shared or the
+user's own bib, not necessarily this install's default `__BIB_ROOT__`):
+
+```bash
+python3 __BIB_ROOT__/tools/workspace.py resolve \
+  --from "${PAPER_DIR:-$PWD}" --default __BIB_ROOT__
+```
+
+Use the resolved `bib_root` in place of `__BIB_ROOT__` below. If the workspace
+has an `s3` block, **pull first** so you classify against the full, current
+staging folder (skip silently if local-only):
+
+```bash
+python3 <bib_root>/tools/s3_sync.py pull --from "${PAPER_DIR:-$PWD}"
+```
+
 ## Setup
 
 Read these every run (they are the source of truth — never hardcode entries):
@@ -118,6 +136,18 @@ python3 __BIB_ROOT__/tools/extract_pdf_abstracts.py
 ```
 
 This script also re-runs the classifier on remaining `_unclassified/` PDFs after extracting abstracts — a second-chance pass.
+
+### Stage 6 — Push refiled PDFs to the team (if S3)
+
+If any PDFs were moved **and** the workspace has an `s3` block, remind the user to
+upload the refiled tree so collaborators get the new theme placement:
+
+```bash
+python3 <bib_root>/tools/s3_sync.py push --from "${PAPER_DIR:-$PWD}"
+```
+
+Push is manual — surface the command, don't run it automatically. Local-only
+workspaces have nothing to push.
 
 ## Output format
 

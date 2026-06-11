@@ -248,6 +248,7 @@ Tell the user:
 - `notebooklm ask "..."` - chat queries (without `--save-as-note`)
 - `notebooklm history` - display conversation history (read-only)
 - `notebooklm source add` - add sources
+- `notebooklm share status` - show who has access (read-only)
 
 **Ask before running:**
 - `notebooklm delete` - destructive
@@ -255,6 +256,8 @@ Tell the user:
 - `notebooklm download *` - writes to filesystem
 - `notebooklm ask "..." --save-as-note` - writes a note
 - `notebooklm history --save` - writes a note
+- `notebooklm share add/update/remove` - grants or revokes another person's access
+- `notebooklm share public` - exposes the notebook via a public link
 
 ## Quick Reference
 
@@ -302,6 +305,56 @@ Tell the user:
 | Download flashcards | `notebooklm download flashcards cards.json` |
 | List languages | `notebooklm language list` |
 | Set language | `notebooklm language set zh_Hans` |
+| Share with a person (editor) | `notebooklm share add <email> --permission editor` |
+| Share with a person (viewer) | `notebooklm share add <email> --permission viewer` |
+| Change someone's access | `notebooklm share update <email> --permission viewer` |
+| Revoke access | `notebooklm share remove <email>` |
+| Show who has access | `notebooklm share status` |
+| Public link on/off | `notebooklm share public --enable` / `--disable` |
+| Viewer scope (full/chat) | `notebooklm share view-level full` |
+
+## Team access (sharing a notebook with collaborators)
+
+NotebookLM notebooks are owned by the Google account that created them. To let a
+co-author or advisor use **your** notebooks, share them — they then query the
+same notebook IDs from **their own** `notebooklm login`. This is the single-
+source-of-truth path: one set of notebooks, no duplication.
+
+**Owner shares (run by the notebook owner):**
+```bash
+notebooklm use <notebook_id>
+notebooklm share add advisor@example.com --permission editor   # editor: can also add sources
+notebooklm share status                                        # confirm the grant
+```
+Batch over several notebooks by looping their IDs.
+
+**Collaborator uses a shared notebook:** after their own `notebooklm login`, the
+shared notebook appears in `notebooklm list` (and under "Shared with me" in the
+web UI). They reference it by the same ID — `notebooklm use <notebook_id>` — so
+the paper-skills routing (`.notebook.json`, the catalog name→ID map) works
+unchanged for them.
+
+**Permission levels:** `editor` (query + add/modify sources — right for a close
+co-author/advisor) vs `viewer` (query only — right when you want sole control of
+sources). `share update` changes a level; `share remove` revokes.
+
+### Fallback: rebuild in your own account (no access)
+
+If a collaborator tries `notebooklm use <id>` for a notebook they were **not**
+granted access to, the CLI returns an authorization error. In that case, offer to
+**rebuild an equivalent notebook in their own account** from the synced local
+PDFs (after `/bib-sync pull`):
+
+```bash
+notebooklm create "Refs <paper> (local)"
+# for each pdf the paper needs:
+notebooklm source add "<bib_root>/pdfs/<theme>/<key>.pdf"
+```
+
+Then write the new notebook's `id` into `<bib_root>/papers/<name>/.notebook.json`
+so `/claim-cite` and `/claims-audit` use their own copy. This is independent but
+duplicates effort and the notebooks drift over time — prefer real sharing when
+the owner is reachable.
 
 ## Generation Types
 

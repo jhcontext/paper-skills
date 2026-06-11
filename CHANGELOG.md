@@ -4,6 +4,31 @@ All notable changes to `paper-skills` are documented here. This project follows
 [Semantic Versioning](https://semver.org). The current version is also shown at
 the top of the [README](README.md).
 
+## v0.3.0
+
+### Added
+
+- **Team workflows.** The kit now supports multiple collaborators on the same
+  papers and bibliography:
+  - New `bib-sync` skill — syncs the PDF library to/from S3 (`pull` / `push` /
+    `status` / `--setup`). Heavy PDFs travel through S3; metadata stays in git.
+  - New per-workspace config `.paper-skills.json` (non-secret: bucket, prefix,
+    region, AWS profile name, NotebookLM profile). No credentials are ever stored
+    in the repo — AWS keys live in `~/.aws`, NotebookLM auth in `~/.notebooklm`.
+  - New `tools/workspace.py` resolver — skills auto-detect which bibliography
+    workspace applies (a shared bib vs. your own), so one machine can run both
+    without re-installing. Falls back to the install-time `__BIB_ROOT__` for
+    single-workspace setups (backward compatible).
+  - New `tools/s3_sync.py` — dependency-free wrapper over `aws s3 sync`.
+  - `bib-search` and `bib-classify` auto-pull shared PDFs before they need them
+    and remind you to push new/refiled PDFs; metadata-only skills don't sync.
+  - `notebooklm` skill documents the `share` command group and adds a **Team
+    access** section (share notebooks with a collaborator's Google account as
+    editor/viewer) plus a rebuild-from-local-PDFs fallback when access isn't
+    granted.
+  - Installer gained an optional S3 / NotebookLM-profile step and a retrofit
+    path for existing installs.
+
 ## v0.2.2
 
 ### Changed
